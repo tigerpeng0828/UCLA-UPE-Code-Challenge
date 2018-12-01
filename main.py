@@ -1,6 +1,5 @@
 import requests
-row = 0
-col = 0
+
 
 def getStatus(token):
     return requests.post("http://ec2-34-216-8-43.us-west-2.compute.amazonaws.com/game?token="+token).json()
@@ -20,14 +19,18 @@ def main():
         current = [y,x]
         print(game_states["status"])
         print(game_states["levels_completed"])
+        global row
         row = r
+        global col
         col = c
         maze(token, current)
 
+
+
 def out_of_bound (coordinate, row, col):
     if coordinate[0] < 0 or coordinate[0] >= row or coordinate[1] < 0 or coordinate[1] >= col:
-        return False
-    return True
+        return True
+    return False
 
 def reverse_dir (dir):
     if dir == "UP":
@@ -56,6 +59,9 @@ def helpmaze(current, token,discovered_or_wall):
     }
 
     for dir,coordinate in dict.items():
+        print(dir)
+        print(row)
+        print(col)
         if (not out_of_bound(coordinate,row,col)) and (coordinate not in discovered_or_wall):
             result = requests.post("http://ec2-34-216-8-43.us-west-2.compute.amazonaws.com/game?token="+token, {"action":dir}).json()
             print(result)
